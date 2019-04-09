@@ -5,7 +5,7 @@ eureka:
 
 spring:
   application:
-    name: client
+    name: Product
   datasource:
     username: root
     password: 123456
