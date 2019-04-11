@@ -1,5 +1,6 @@
 package com.nju.client.controller;
 
+import com.nju.client.DTO.CartDTO;
 import com.nju.client.VO.ProductInfoVO;
 import com.nju.client.VO.ProductVO;
 import com.nju.client.VO.ResultVO;
@@ -72,6 +73,11 @@ public class ProductController {
     public List<ProductInfo> listForOrder(@RequestBody List<String> productIdList) {
         return productService.findList(productIdList);
 
+    }
+
+    @PostMapping("/decreaseStock")
+    public void decreaseStock(@RequestBody List<CartDTO> cartDTOList) {
+        productService.decreaseStock(cartDTOList);
     }
 
 }
