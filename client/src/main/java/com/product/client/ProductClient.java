@@ -22,7 +22,9 @@ public interface ProductClient {
 
     @Component
     static class ProductClientFallback implements ProductClient {
-
+        /*
+            服务降级
+         */
         @Override
         public List<ProductInfoOutput> listForOrder(List<String> productIdList) {
             return null;
