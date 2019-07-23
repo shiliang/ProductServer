@@ -14,6 +14,8 @@ spring:
   jpa:
     show-sql: true
 
+
+
 eureka:
   client:
     service-url:
@@ -25,3 +27,8 @@ logging:
     org.springframework.cloud.netflix.feign: debug
 rocketmq:
   nameserver: 106.12.17.107:9876
+feign:
+  hystrix:
+    enabled: true
+
+

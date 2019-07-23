@@ -1,5 +1,7 @@
 package com.product.server.controller;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.product.common.DecreaseStockInput;
 import com.product.common.ProductInfoOutput;
 import com.product.server.VO.ProductInfoVO;
@@ -70,6 +72,21 @@ public class ProductController {
      * @param productIdList
      * @return
      */
+    @HystrixCommand(fallbackMethod = "error",
+            commandProperties = {
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),  //设置熔断
+            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "10"),
+            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "1000"),
+            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "60")
+    },
+    threadPoolProperties = {
+            @HystrixProperty(name = "coreSize", value = "8"),
+            @HystrixProperty(name = "maxQueueSize", value = "100"),
+            @HystrixProperty(name = "keepAliveTimeMinutes", value = "2"),
+            @HystrixProperty(name = "queueSizeRejectionThreshold", value = "15"),
+            @HystrixProperty(name = "metrics.rollingStats.numBuckets", value = "12"),
+            @HystrixProperty(name = "metrics.rollingStats.timeInMilliseconds", value = "1440")
+    })
     @PostMapping("/listForOrder")
     public List<ProductInfoOutput> listForOrder(@RequestBody List<String> productIdList) {
         return productService.findList(productIdList);
@@ -79,5 +96,11 @@ public class ProductController {
     public void decreaseStock(@RequestBody List<DecreaseStockInput> decreaseStockInputList) {
         productService.decreaseStock(decreaseStockInputList);
     }
+
+    public List<ProductInfoOutput> error(List<String> productIdList) {
+        System.out.println("熔断");
+        return null;
+    }
+
 
 }
