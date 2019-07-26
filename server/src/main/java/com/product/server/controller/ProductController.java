@@ -76,12 +76,12 @@ public class ProductController {
             commandProperties = {
             @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),  //设置熔断
             @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "10"),
-            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "1000"),
-            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "60")
+            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "1000"),  //熔断多久之后开始恢复
+            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "60")  //出错百分比，当超过这个百分比之后开始熔断
     },
     threadPoolProperties = {
-            @HystrixProperty(name = "coreSize", value = "8"),
-            @HystrixProperty(name = "maxQueueSize", value = "100"),
+            @HystrixProperty(name = "coreSize", value = "10"),   //线程核心数
+            @HystrixProperty(name = "maxQueueSize", value = "100"),  //最大排队长度
             @HystrixProperty(name = "keepAliveTimeMinutes", value = "2"),
             @HystrixProperty(name = "queueSizeRejectionThreshold", value = "15"),
             @HystrixProperty(name = "metrics.rollingStats.numBuckets", value = "12"),
@@ -89,7 +89,8 @@ public class ProductController {
     })
     @PostMapping("/listForOrder")
     public List<ProductInfoOutput> listForOrder(@RequestBody List<String> productIdList) {
-        return productService.findList(productIdList);
+        List<ProductInfoOutput> res = productService.findList(productIdList);
+        return res;
     }
 
     @PostMapping("/decreaseStock")
